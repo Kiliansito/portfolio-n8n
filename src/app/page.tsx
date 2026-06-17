@@ -6,6 +6,7 @@ export default function Home() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle"
   );
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -23,6 +24,12 @@ export default function Home() {
       presupuesto: Number(formData.get("presupuesto")),
       prioridad: formData.get("prioridad"),
     };
+    if (isDemoMode) {
+  console.log("Lead recibido en modo demo:", lead);
+  setStatus("success");
+  form.reset();
+  return;
+}
 
     try {
       const response = await fetch("/api/lead", {
@@ -189,7 +196,9 @@ export default function Home() {
 
               {status === "success" && (
                 <p className="rounded-xl bg-green-100 px-4 py-3 text-sm font-medium text-green-800">
-                  Solicitud enviada correctamente.
+                  {isDemoMode
+  ? "Demo enviada correctamente. En producción este formulario conectará con n8n, Google Sheets y Gmail."
+  : "Solicitud enviada correctamente."}
                 </p>
               )}
 
