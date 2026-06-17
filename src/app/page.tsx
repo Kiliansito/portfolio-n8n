@@ -1,65 +1,208 @@
-import Image from "next/image";
+"use client";
+
+import { useState, type FormEvent } from "react";
 
 export default function Home() {
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
+    "idle"
+  );
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus("loading");
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    const lead = {
+      nombre: formData.get("nombre"),
+      email: formData.get("email"),
+      telefono: formData.get("telefono"),
+      tipo_negocio: formData.get("tipo_negocio"),
+      mensaje: formData.get("mensaje"),
+      presupuesto: Number(formData.get("presupuesto")),
+      prioridad: formData.get("prioridad"),
+    };
+
+    try {
+      const response = await fetch("/api/lead", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(lead),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error enviando el formulario");
+      }
+
+      setStatus("success");
+      form.reset();
+    } catch (error) {
+      console.error(error);
+      setStatus("error");
+    }
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="min-h-screen bg-slate-950 text-white">
+      <section className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-12">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+          <div>
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
+              Automatización + Webs con IA
+            </p>
+
+            <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
+              Consigue una web que capture clientes automáticamente.
+            </h1>
+
+            <p className="mb-8 max-w-xl text-lg text-slate-300">
+              Creo páginas web, formularios inteligentes y automatizaciones para
+              pequeños negocios. Tus leads se guardan automáticamente y recibes
+              avisos cuando un cliente tiene alto presupuesto.
+            </p>
+
+            <div className="grid gap-4 text-sm text-slate-300 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <strong className="block text-white">Web profesional</strong>
+                Landing clara y preparada para vender.
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <strong className="block text-white">Leads en Sheets</strong>
+                Datos guardados automáticamente.
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <strong className="block text-white">Avisos por Gmail</strong>
+                Notificación si el lead es prioritario.
+              </div>
+            </div>
+          </div>
+
+          <form
+            onSubmit={handleSubmit}
+            className="rounded-3xl border border-white/10 bg-white p-6 text-slate-950 shadow-2xl"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <h2 className="mb-2 text-2xl font-bold">Solicita tu demo</h2>
+            <p className="mb-6 text-sm text-slate-600">
+              Rellena el formulario y recibiré tu solicitud automáticamente.
+            </p>
+
+            <div className="grid gap-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium">Nombre</label>
+                <input
+                  name="nombre"
+                  required
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-cyan-500"
+                  placeholder="Clínica Dental Sonrisa Plus"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">Email</label>
+                <input
+                  name="email"
+                  type="email"
+                  required
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-cyan-500"
+                  placeholder="contacto@negocio.com"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  Teléfono
+                </label>
+                <input
+                  name="telefono"
+                  required
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-cyan-500"
+                  placeholder="+34600000000"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  Tipo de negocio
+                </label>
+                <input
+                  name="tipo_negocio"
+                  required
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-cyan-500"
+                  placeholder="Restaurante, clínica, gimnasio..."
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  Presupuesto aproximado
+                </label>
+                <input
+                  name="presupuesto"
+                  type="number"
+                  required
+                  min="0"
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-cyan-500"
+                  placeholder="1200"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  Prioridad
+                </label>
+                <select
+                  name="prioridad"
+                  required
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-cyan-500"
+                  defaultValue="Media"
+                >
+                  <option value="Baja">Baja</option>
+                  <option value="Media">Media</option>
+                  <option value="Alta">Alta</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium">
+                  Mensaje
+                </label>
+                <textarea
+                  name="mensaje"
+                  required
+                  rows={4}
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-cyan-500"
+                  placeholder="Quiero una web con formulario, WhatsApp y automatización de leads..."
+                />
+              </div>
+
+              <button
+                disabled={status === "loading"}
+                className="rounded-xl bg-slate-950 px-5 py-3 font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {status === "loading" ? "Enviando..." : "Enviar solicitud"}
+              </button>
+
+              {status === "success" && (
+                <p className="rounded-xl bg-green-100 px-4 py-3 text-sm font-medium text-green-800">
+                  Solicitud enviada correctamente.
+                </p>
+              )}
+
+              {status === "error" && (
+                <p className="rounded-xl bg-red-100 px-4 py-3 text-sm font-medium text-red-800">
+                  Ha ocurrido un error. Comprueba que n8n está activo y
+                  escuchando el webhook de test.
+                </p>
+              )}
+            </div>
+          </form>
         </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }
