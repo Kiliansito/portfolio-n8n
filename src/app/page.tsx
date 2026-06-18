@@ -49,14 +49,15 @@ export default function Home() {
     const formData = new FormData(form);
 
     const lead = {
-      nombre: formData.get("nombre"),
-      email: formData.get("email"),
-      telefono: formData.get("telefono"),
-      tipo_negocio: formData.get("tipo_negocio"),
-      mensaje: formData.get("mensaje"),
-      presupuesto: Number(formData.get("presupuesto")),
-      prioridad: formData.get("prioridad"),
-    };
+  nombre: formData.get("nombre"),
+  email: formData.get("email"),
+  telefono: formData.get("telefono"),
+  tipo_negocio: formData.get("tipo_negocio"),
+  mensaje: formData.get("mensaje"),
+  presupuesto: Number(formData.get("presupuesto")),
+  prioridad: formData.get("prioridad"),
+  website: formData.get("website"),
+};
 
     if (isDemoMode) {
       console.log("Lead recibido en modo demo:", lead);
@@ -277,11 +278,22 @@ export default function Home() {
               </p>
             </div>
           </div>
-
           <form
             onSubmit={handleSubmit}
             className="rounded-3xl border border-white/10 bg-white p-6 text-slate-950 shadow-2xl"
           >
+            <div className="absolute left-[-9999px]" aria-hidden="true">
+              <label htmlFor="website">Website</label>
+              <input
+                id="website"
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+
+            <h2 className="mb-2 text-2xl font-bold">Solicita tu demo</h2>
             <h2 className="mb-2 text-2xl font-bold">Solicita tu demo</h2>
             <p className="mb-6 text-sm text-slate-600">
               Rellena el formulario y la automatización procesará el lead.

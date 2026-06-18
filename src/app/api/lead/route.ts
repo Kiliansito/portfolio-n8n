@@ -8,6 +8,7 @@ type LeadInput = {
   mensaje?: unknown;
   presupuesto?: unknown;
   prioridad?: unknown;
+  website?: unknown;
 };
 
 type ValidLead = {
@@ -26,6 +27,12 @@ function isValidEmail(email: string) {
 
 function getStringValue(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function isSpamLead(body: LeadInput) {
+  const website = getStringValue(body.website);
+
+  return website.length > 0;
 }
 
 function validateLead(body: LeadInput): {
@@ -100,6 +107,15 @@ function validateLead(body: LeadInput): {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+
+    if (isSpamLead(body)) {
+      console.warn("Lead bloqueado por honeypot:", body);
+
+      return NextResponse.json({
+        ok: true,
+        message: "Lead recibido correctamente",
+      });
+    }
 
     const validation = validateLead(body);
 
