@@ -423,6 +423,30 @@
       ],
       "id": "2cc9b6e3-5225-4626-bd12-36c1b40b43a1",
       "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "Hemos recibido tu solicitud",
+        "message": "=Hola {{ $json.nombre }},  Hemos recibido tu solicitud correctamente.  \nGracias por contactar con nosotros. Revisaremos la información que nos has enviado y te responderemos lo antes posible.  \nUn saludo.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        176
+      ],
+      "id": "ab1b2824-2fab-49d8-b102-b3e23dde0b78",
+      "name": "Send a message1",
+      "webhookId": "d732d924-c352-4c60-8060-c650f5718627",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PwLghGf3OfbUEaPy",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueRegularOutput"
     }
   ],
   "pinData": {},
@@ -474,8 +498,18 @@
             "node": "If",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
           }
         ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
       ]
     }
   },
@@ -485,7 +519,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "7ea42f34-cc67-4435-9211-bda253f6c8d5",
+  "versionId": "5788331f-50ef-4137-9dd0-9a108df3f13f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "109db77b6ca7ebb7a283fd37245d1f3970abfb0b077eec6bf958ff2689cde463"
