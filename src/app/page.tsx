@@ -38,12 +38,14 @@ const flowSteps = [
 
 export default function Home() {
   const [status, setStatus] = useState<FormStatus>("idle");
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus("loading");
+    setErrorMessages([]);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -67,24 +69,35 @@ export default function Home() {
     }
 
     try {
-      const response = await fetch("/api/lead", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(lead),
-      });
+     const response = await fetch("/api/lead", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(lead),
+});
 
-      if (!response.ok) {
-        throw new Error("Error enviando el formulario");
-      }
+const data = await response.json();
 
-      setStatus("success");
-      form.reset();
+if (!response.ok) {
+  const details = Array.isArray(data.details)
+    ? data.details
+    : ["Ha ocurrido un error enviando el formulario."];
+
+  setErrorMessages(details);
+  setStatus("error");
+  return;
+}
+
+setStatus("success");
+form.reset();
     } catch (error) {
-      console.error(error);
-      setStatus("error");
-    }
+  console.error(error);
+  setErrorMessages([
+    "No se ha podido conectar con el servidor. Comprueba que la web y n8n están activos.",
+  ]);
+  setStatus("error");
+}
   }
 
   return (
@@ -404,11 +417,16 @@ export default function Home() {
               )}
 
               {status === "error" && (
-                <p className="rounded-xl bg-red-100 px-4 py-3 text-sm font-medium text-red-800">
-                  Ha ocurrido un error. Comprueba que n8n está activo y
-                  escuchando el webhook de test.
-                </p>
-              )}
+  <div className="rounded-xl bg-red-100 px-4 py-3 text-sm font-medium text-red-800">
+    <p className="mb-2">No se ha podido enviar el formulario:</p>
+
+    <ul className="list-disc space-y-1 pl-5">
+      {errorMessages.map((message) => (
+        <li key={message}>{message}</li>
+      ))}
+    </ul>
+  </div>
+)}
             </div>
           </form>
         </div>
