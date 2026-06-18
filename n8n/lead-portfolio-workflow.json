@@ -10,7 +10,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        0,
+        -192,
         0
       ],
       "id": "f4d9d7a8-3cb8-4b06-9bcf-5da4a74aca3f",
@@ -29,7 +29,7 @@
           "conditions": [
             {
               "id": "127ac20e-3b4a-42ea-b107-04d44856e7d1",
-              "leftValue": "={{ $json.body.presupuesto }}",
+              "leftValue": "={{ $json.presupuesto }}",
               "rightValue": 500,
               "operator": {
                 "type": "number",
@@ -71,14 +71,14 @@
           "mappingMode": "defineBelow",
           "value": {
             "fecha": "={{ $now }}",
-            "telefono": "={{ $json.body.telefono }}",
-            "email": "={{ $json.body.email }}",
-            "nombre": "={{ $json.body.nombre }}",
-            "tipo_negocio": "={{ $json.body.tipo_negocio }}",
-            "mensaje": "={{ $json.body.mensaje }}",
-            "presupuesto": "={{ $json.body.presupuesto }}",
-            "prioridad": "={{ $json.body.prioridad }}",
-            "estado": "Lead Prioritario"
+            "telefono": "={{ $json.telefono }}",
+            "email": "={{ $json.email }}",
+            "nombre": "={{ $json.nombre }}",
+            "tipo_negocio": "={{ $json.tipo_negocio }}",
+            "mensaje": "={{ $json.mensaje }}",
+            "presupuesto": "={{ $json.presupuesto }}",
+            "prioridad": "={{ $json.nivel_prioridad }}",
+            "estado": "={{ $json.estado }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -205,14 +205,14 @@
           "mappingMode": "defineBelow",
           "value": {
             "fecha": "={{ $now }}",
-            "telefono": "={{ $json.body.telefono }}",
-            "email": "={{ $json.body.email }}",
-            "nombre": "={{ $json.body.nombre }}",
-            "tipo_negocio": "={{ $json.body.tipo_negocio }}",
-            "mensaje": "={{ $json.body.mensaje }}",
-            "presupuesto": "={{ $json.body.presupuesto }}",
-            "prioridad": "={{ $json.body.prioridad }}",
-            "estado": "Lead Normal"
+            "telefono": "={{ $json.telefono }}",
+            "email": "={{ $json.email }}",
+            "nombre": "={{ $json.nombre }}",
+            "tipo_negocio": "={{ $json.tipo_negocio }}",
+            "mensaje": "={{ $json.mensaje }}",
+            "presupuesto": "={{ $json.presupuesto }}",
+            "prioridad": "={{ $json.nivel_prioridad }}",
+            "estado": "={{ $json.estado }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -321,8 +321,8 @@
     {
       "parameters": {
         "sendTo": "kilianvizca@gmail.com",
-        "subject": "=Nuevo Lead Prioritario: {{ $('Webhook').item.json.body.nombre }}",
-        "message": "=<h2>Nuevo lead prioritario</h2>\n\n<p><strong>Nombre:</strong> {{ $('Webhook').item.json.body.nombre }}</p>\n<p><strong>Email:</strong> {{ $('Webhook').item.json.body.email }}</p>\n<p><strong>Teléfono:</strong> {{ $('Webhook').item.json.body.telefono }}</p>\n<p><strong>Tipo de negocio:</strong> {{ $('Webhook').item.json.body.tipo_negocio }}</p>\n<p><strong>Presupuesto:</strong> {{ $('Webhook').item.json.body.presupuesto }} €</p>\n<p><strong>Prioridad:</strong> {{ $('Webhook').item.json.body.prioridad }}</p>\n\n<p><strong>Mensaje:</strong></p>\n<p>{{ $('Webhook').item.json.body.mensaje }}</p>",
+        "subject": "=Nuevo lead prioritario: {{ $json.nombre }}",
+        "message": "=<h2>Nuevo lead prioritario</h2>\n\n<p><strong>Nombre:</strong> {{ $json.nombre }}</p>\n<p><strong>Email:</strong> {{ $json.email }}</p>\n<p><strong>Teléfono:</strong> {{ $json.telefono }}</p>\n<p><strong>Tipo de negocio:</strong> {{ $json.tipo_negocio }}</p>\n<p><strong>Presupuesto:</strong> {{ $json.presupuesto }} €</p>\n<p><strong>Prioridad:</strong> {{ $json.prioridad }}</p>\n\n<p><strong>Mensaje:</strong></p>\n<p>{{ $json.mensaje }}</p>",
         "options": {}
       },
       "type": "n8n-nodes-base.gmail",
@@ -340,6 +340,89 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8ce893ee-d5ec-4fc6-843b-2a822c801c4d",
+              "name": "fecha",
+              "value": "={{ $now }}",
+              "type": "string"
+            },
+            {
+              "id": "f78d2da9-77fe-4152-b857-9349161a536e",
+              "name": "nombre",
+              "value": "={{ $json.body.nombre }}",
+              "type": "string"
+            },
+            {
+              "id": "ceb76d6c-3ee9-40f7-b742-1f0013587d51",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "0713abc3-28b8-4017-a95f-d28a96a70dee",
+              "name": "telefono",
+              "value": "={{ $json.body.telefono }}",
+              "type": "string"
+            },
+            {
+              "id": "1684cee7-48aa-4fe9-a7f9-7c2ce61acfe3",
+              "name": "tipo_negocio",
+              "value": "={{ $json.body.tipo_negocio }}",
+              "type": "string"
+            },
+            {
+              "id": "7ac7a29d-b195-4313-b10f-ccfec4d706a3",
+              "name": "mensaje",
+              "value": "={{ $json.body.mensaje }}",
+              "type": "string"
+            },
+            {
+              "id": "07db49d3-8593-42d9-894e-e9c4b6dff23c",
+              "name": "presupuesto",
+              "value": "={{ Number($json.body.presupuesto) }}",
+              "type": "number"
+            },
+            {
+              "id": "a48567ce-5def-48c0-97f3-bc94e070310b",
+              "name": "prioridad_formulario",
+              "value": "={{ $json.body.prioridad }}",
+              "type": "string"
+            },
+            {
+              "id": "314bd9cd-3e0f-4a15-908a-1c23124ad409",
+              "name": "nivel_prioridad",
+              "value": "= {{ Number($json.body.presupuesto) >= 1000 ? 'Lead muy prioritario' : Number($json.body.presupuesto) >= 500 ? 'Lead prioritario' : 'Lead normal' }}",
+              "type": "string"
+            },
+            {
+              "id": "2f8a152a-9c80-4990-bdd7-327d0c2b8e5e",
+              "name": "estado",
+              "value": "nuevo",
+              "type": "string"
+            },
+            {
+              "id": "2437c0d7-5f8a-4fb6-859b-7cdbccbf0830",
+              "name": "fuente",
+              "value": "portfolio",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        16,
+        0
+      ],
+      "id": "2cc9b6e3-5225-4626-bd12-36c1b40b43a1",
+      "name": "Edit Fields"
     }
   ],
   "pinData": {},
@@ -348,7 +431,7 @@
       "main": [
         [
           {
-            "node": "If",
+            "node": "Edit Fields",
             "type": "main",
             "index": 0
           }
@@ -383,6 +466,17 @@
           }
         ]
       ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -391,7 +485,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "e2f4468e-be4c-48b4-aaa5-09b6726f1579",
+  "versionId": "7ea42f34-cc67-4435-9211-bda253f6c8d5",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "109db77b6ca7ebb7a283fd37245d1f3970abfb0b077eec6bf958ff2689cde463"
