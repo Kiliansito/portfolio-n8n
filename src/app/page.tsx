@@ -2,10 +2,43 @@
 
 import { useState, type FormEvent } from "react";
 
+type FormStatus = "idle" | "loading" | "success" | "error";
+
+const useCases = [
+  "Clínicas",
+  "Restaurantes",
+  "Gimnasios",
+  "Academias",
+  "Inmobiliarias",
+  "Peluquerías",
+];
+
+const benefits = [
+  {
+    title: "No perder solicitudes",
+    text: "Cada lead queda guardado automáticamente en Google Sheets.",
+  },
+  {
+    title: "Priorizar clientes buenos",
+    text: "Los leads con mayor presupuesto se detectan y notifican por Gmail.",
+  },
+  {
+    title: "Automatizar tareas repetidas",
+    text: "El negocio no tiene que copiar datos manualmente ni revisar formularios todo el día.",
+  },
+];
+
+const flowSteps = [
+  "Formulario web",
+  "API interna Next.js",
+  "Webhook n8n",
+  "Google Sheets",
+  "Gmail si es prioritario",
+];
+
 export default function Home() {
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
-    "idle"
-  );
+  const [status, setStatus] = useState<FormStatus>("idle");
+
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -24,12 +57,13 @@ export default function Home() {
       presupuesto: Number(formData.get("presupuesto")),
       prioridad: formData.get("prioridad"),
     };
+
     if (isDemoMode) {
-  console.log("Lead recibido en modo demo:", lead);
-  setStatus("success");
-  form.reset();
-  return;
-}
+      console.log("Lead recibido en modo demo:", lead);
+      setStatus("success");
+      form.reset();
+      return;
+    }
 
     try {
       const response = await fetch("/api/lead", {
@@ -54,38 +88,193 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      <section className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-12">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+      <section className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-16">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
-              Automatización + Webs con IA
+              Webs + Automatizaciones con IA
             </p>
 
             <h1 className="mb-6 text-4xl font-bold tracking-tight md:text-6xl">
-              Consigue una web que capture clientes automáticamente.
+              Captura leads y automatiza respuestas para pequeños negocios.
             </h1>
 
             <p className="mb-8 max-w-xl text-lg text-slate-300">
-              Creo páginas web, formularios inteligentes y automatizaciones para
-              pequeños negocios. Tus leads se guardan automáticamente y recibes
-              avisos cuando un cliente tiene alto presupuesto.
+              Demo práctica de una web conectada a n8n que recibe solicitudes,
+              las guarda en Google Sheets y avisa por Gmail cuando un lead tiene
+              alto presupuesto.
             </p>
 
-            <div className="grid gap-4 text-sm text-slate-300 sm:grid-cols-3">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <strong className="block text-white">Web profesional</strong>
-                Landing clara y preparada para vender.
-              </div>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <a
+                href="#formulario"
+                className="rounded-xl bg-cyan-400 px-6 py-3 text-center font-semibold text-slate-950 transition hover:bg-cyan-300"
+              >
+                Probar formulario
+              </a>
 
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <strong className="block text-white">Leads en Sheets</strong>
-                Datos guardados automáticamente.
-              </div>
+              <a
+                href="#flujo"
+                className="rounded-xl border border-white/15 px-6 py-3 text-center font-semibold text-white transition hover:bg-white/10"
+              >
+                Ver cómo funciona
+              </a>
+            </div>
+          </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <strong className="block text-white">Avisos por Gmail</strong>
-                Notificación si el lead es prioritario.
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">
+              Flujo de la demo
+            </p>
+
+            <div className="space-y-3">
+              {flowSteps.map((step, index) => (
+                <div
+                  key={step}
+                  className="flex items-center gap-4 rounded-2xl border border-white/10 bg-slate-900/80 p-4"
+                >
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cyan-400 font-bold text-slate-950">
+                    {index + 1}
+                  </div>
+
+                  <div>
+                    <p className="font-semibold">{step}</p>
+                    <p className="text-sm text-slate-400">
+                      {index === 0 && "El cliente rellena sus datos."}
+                      {index === 1 && "La web procesa el envío de forma segura."}
+                      {index === 2 && "n8n recibe el lead y ejecuta el workflow."}
+                      {index === 3 && "El lead queda registrado automáticamente."}
+                      {index === 4 && "Solo se avisa si el presupuesto es alto."}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-white/10 bg-slate-900/60 px-6 py-16">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
+            Problema
+          </p>
+
+          <h2 className="mb-6 max-w-3xl text-3xl font-bold md:text-4xl">
+            Muchos negocios pierden clientes porque gestionan las solicitudes de
+            forma manual.
+          </h2>
+
+          <p className="max-w-3xl text-lg text-slate-300">
+            Un cliente pide información, nadie responde rápido, los datos se
+            pierden en mensajes sueltos o no queda claro qué oportunidades son
+            más importantes. Esta demo resuelve ese flujo básico con una web y
+            una automatización.
+          </p>
+        </div>
+      </section>
+
+      <section className="px-6 py-16">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
+            Solución
+          </p>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {benefits.map((benefit) => (
+              <div
+                key={benefit.title}
+                className="rounded-3xl border border-white/10 bg-white/5 p-6"
+              >
+                <h3 className="mb-3 text-xl font-bold">{benefit.title}</h3>
+                <p className="text-slate-300">{benefit.text}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="flujo" className="bg-slate-900/60 px-6 py-16">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
+            Arquitectura técnica
+          </p>
+
+          <h2 className="mb-8 text-3xl font-bold md:text-4xl">
+            Así funciona por dentro.
+          </h2>
+
+          <div className="grid gap-4 md:grid-cols-5">
+            {flowSteps.map((step, index) => (
+              <div
+                key={step}
+                className="rounded-3xl border border-white/10 bg-slate-950 p-5"
+              >
+                <p className="mb-4 text-3xl font-bold text-cyan-400">
+                  0{index + 1}
+                </p>
+                <h3 className="font-semibold">{step}</h3>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-6">
+            <p className="mb-3 font-semibold">Regla principal del workflow:</p>
+
+            <pre className="overflow-x-auto rounded-2xl bg-slate-950 p-4 text-sm text-slate-300">
+{`IF presupuesto >= 500
+├── Lead prioritario → Google Sheets + Gmail
+└── Lead normal → Google Sheets`}
+            </pre>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 py-16">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
+            Casos de uso
+          </p>
+
+          <h2 className="mb-8 text-3xl font-bold md:text-4xl">
+            Aplicable a negocios locales que reciben solicitudes.
+          </h2>
+
+          <div className="flex flex-wrap gap-3">
+            {useCases.map((useCase) => (
+              <span
+                key={useCase}
+                className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-slate-200"
+              >
+                {useCase}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="formulario" className="bg-slate-900/60 px-6 py-16">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-start">
+          <div>
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
+              Prueba la demo
+            </p>
+
+            <h2 className="mb-6 text-3xl font-bold md:text-4xl">
+              Envía un lead de prueba.
+            </h2>
+
+            <p className="mb-6 text-lg text-slate-300">
+              En local, este formulario conecta con n8n, Google Sheets y Gmail.
+              En Vercel está en modo demo hasta desplegar n8n en un VPS.
+            </p>
+
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-5 text-sm text-slate-300">
+              <p className="mb-2 font-semibold text-white">Prueba recomendada:</p>
+              <p>
+                Usa un presupuesto de <strong>1200 €</strong> para probar el
+                camino de lead prioritario.
+              </p>
             </div>
           </div>
 
@@ -95,7 +284,7 @@ export default function Home() {
           >
             <h2 className="mb-2 text-2xl font-bold">Solicita tu demo</h2>
             <p className="mb-6 text-sm text-slate-600">
-              Rellena el formulario y recibiré tu solicitud automáticamente.
+              Rellena el formulario y la automatización procesará el lead.
             </p>
 
             <div className="grid gap-4">
@@ -197,8 +386,8 @@ export default function Home() {
               {status === "success" && (
                 <p className="rounded-xl bg-green-100 px-4 py-3 text-sm font-medium text-green-800">
                   {isDemoMode
-  ? "Demo enviada correctamente. En producción este formulario conectará con n8n, Google Sheets y Gmail."
-  : "Solicitud enviada correctamente."}
+                    ? "Demo enviada correctamente. En producción este formulario conectará con n8n, Google Sheets y Gmail."
+                    : "Solicitud enviada correctamente."}
                 </p>
               )}
 
