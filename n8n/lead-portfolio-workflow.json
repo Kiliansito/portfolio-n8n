@@ -1,0 +1,402 @@
+{
+  "name": "02 - Webhook lead - Sheets + Gmail",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-portfolio",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f4d9d7a8-3cb8-4b06-9bcf-5da4a74aca3f",
+      "name": "Webhook",
+      "webhookId": "3ad7486c-1f68-41a9-ae70-501b2a5af9f9"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "127ac20e-3b4a-42ea-b107-04d44856e7d1",
+              "leftValue": "={{ $json.body.presupuesto }}",
+              "rightValue": 500,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e8109b2c-e899-475b-8c2c-50bec9df2dc3",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1gJWB2CN_GFXaSbofmQ_PxiVMgzxU_NYs-2YHQ0SbInA",
+          "mode": "list",
+          "cachedResultName": "Leads Portfolio n8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gJWB2CN_GFXaSbofmQ_PxiVMgzxU_NYs-2YHQ0SbInA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gJWB2CN_GFXaSbofmQ_PxiVMgzxU_NYs-2YHQ0SbInA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "fecha": "={{ $now }}",
+            "telefono": "={{ $json.body.telefono }}",
+            "email": "={{ $json.body.email }}",
+            "nombre": "={{ $json.body.nombre }}",
+            "tipo_negocio": "={{ $json.body.tipo_negocio }}",
+            "mensaje": "={{ $json.body.mensaje }}",
+            "presupuesto": "={{ $json.body.presupuesto }}",
+            "prioridad": "={{ $json.body.prioridad }}",
+            "estado": "Lead Prioritario"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "telefono",
+              "displayName": "telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tipo_negocio",
+              "displayName": "tipo_negocio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mensaje",
+              "displayName": "mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "presupuesto",
+              "displayName": "presupuesto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prioridad",
+              "displayName": "prioridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        -96
+      ],
+      "id": "9a901066-f02d-4c83-aa58-20226481dd54",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QxeBqrhjxupi2LK5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1gJWB2CN_GFXaSbofmQ_PxiVMgzxU_NYs-2YHQ0SbInA",
+          "mode": "list",
+          "cachedResultName": "Leads Portfolio n8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gJWB2CN_GFXaSbofmQ_PxiVMgzxU_NYs-2YHQ0SbInA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1gJWB2CN_GFXaSbofmQ_PxiVMgzxU_NYs-2YHQ0SbInA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "fecha": "={{ $now }}",
+            "telefono": "={{ $json.body.telefono }}",
+            "email": "={{ $json.body.email }}",
+            "nombre": "={{ $json.body.nombre }}",
+            "tipo_negocio": "={{ $json.body.tipo_negocio }}",
+            "mensaje": "={{ $json.body.mensaje }}",
+            "presupuesto": "={{ $json.body.presupuesto }}",
+            "prioridad": "={{ $json.body.prioridad }}",
+            "estado": "Lead Normal"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "fecha",
+              "displayName": "fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nombre",
+              "displayName": "nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "telefono",
+              "displayName": "telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tipo_negocio",
+              "displayName": "tipo_negocio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mensaje",
+              "displayName": "mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "presupuesto",
+              "displayName": "presupuesto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "prioridad",
+              "displayName": "prioridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "estado",
+              "displayName": "estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        32
+      ],
+      "id": "b46d431e-0315-42c4-beea-babdf679b0d1",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QxeBqrhjxupi2LK5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "kilianvizca@gmail.com",
+        "subject": "=Nuevo Lead Prioritario: {{ $('Webhook').item.json.body.nombre }}",
+        "message": "=<h2>Nuevo lead prioritario</h2>\n\n<p><strong>Nombre:</strong> {{ $('Webhook').item.json.body.nombre }}</p>\n<p><strong>Email:</strong> {{ $('Webhook').item.json.body.email }}</p>\n<p><strong>Teléfono:</strong> {{ $('Webhook').item.json.body.telefono }}</p>\n<p><strong>Tipo de negocio:</strong> {{ $('Webhook').item.json.body.tipo_negocio }}</p>\n<p><strong>Presupuesto:</strong> {{ $('Webhook').item.json.body.presupuesto }} €</p>\n<p><strong>Prioridad:</strong> {{ $('Webhook').item.json.body.prioridad }}</p>\n\n<p><strong>Mensaje:</strong></p>\n<p>{{ $('Webhook').item.json.body.mensaje }}</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "89bea5f5-295b-43b1-ac31-4326cde4728b",
+      "name": "Send a message",
+      "webhookId": "52a7d543-56c6-4a36-be15-05670140b9da",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PwLghGf3OfbUEaPy",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "e2f4468e-be4c-48b4-aaa5-09b6726f1579",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "109db77b6ca7ebb7a283fd37245d1f3970abfb0b077eec6bf958ff2689cde463"
+  },
+  "nodeGroups": [],
+  "id": "dLMcro6d6s13BW2u",
+  "tags": []
+}
